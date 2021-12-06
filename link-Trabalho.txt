@@ -1,0 +1,35 @@
+link : 
+
+https://sandbox.neo4j.com/
+https://raw.githubusercontent.com/DenysonLima/ColArmDados/main/mundo_feliz_2021.csv
+https://raw.githubusercontent.com/DenysonLima/ColArmDados/main/regional_ID.csv
+
+LOAD CSV WITH HEADERS FROM "https://raw.githubusercontent.com/DenysonLima/ColArmDados/main/mundo_feliz_2021.csv" AS row
+CREATE (w:WorldHappinessReport)
+SET w = row
+
+LOAD CSV WITH HEADERS FROM "https://raw.githubusercontent.com/DenysonLima/ColArmDados/main/regional_ID.csv" AS row
+CREATE (r:Regional)
+SET r = row
+
+LOAD CSV WITH HEADERS FROM "https://raw.githubusercontent.com/DenysonLima/ColArmDados/main/livre.csv" AS row
+CREATE (l:livre)
+SET l = row
+
+
+CREATE INDEX ON :WorldHappinessReport(Pais_ID)
+
+CREATE INDEX ON :WorldHappinessReport(livre)
+
+CREATE INDEX ON :RegionalIndicator(Regional)
+
+
+MATCH (w:WorldHappinessReport),(r:Regional)
+WHERE w.Regional_ID = r.Regional
+CREATE (w)-[:PART_OF]->(r)
+
+MATCH (w:WorldHappinessReport),(l:livre)
+WHERE w.livre = l.livre
+CREATE (w)-[:PART_OF]->(l)
+
+https://github.com/DenysonLima/ColArmDados
